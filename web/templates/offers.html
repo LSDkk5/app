@@ -1,0 +1,371 @@
+{% extends "layout.html" %}
+ 
+{% block style %}<link rel="stylesheet" href="{{url_for('static', filename='styles/offers.css')}}">{% endblock style %}
+{% block title %}<title>Jakiś tytuł</title>{% endblock title %}
+ 
+ 
+{% block content %}
+<style>
+    .single-type:nth-child(1) label::before {
+  content: url("{{url_for('static', filename='assets/images/icons/agd.png')}}");
+}
+
+.single-type:nth-child(1) input:checked + label::before {
+  content: url("{{url_for('static', filename='assets/images/icons/agd-white.png')}}");
+}
+
+.single-type:nth-child(2) label::before {
+  content: url("{{url_for('static', filename='assets/images/icons/dziecko.png')}}");
+}
+
+.single-type:nth-child(2) input:checked + label::before {
+  content: url("{{url_for('static', filename='assets/images/icons/dziecko-white.png')}}");
+}
+
+.single-type:nth-child(3) label::before {
+  content: url("{{url_for('static', filename='assets/images/icons/elektronika.png')}}");
+}
+
+.single-type:nth-child(3) input:checked + label::before {
+  content: url("{{url_for('static', filename='assets/images/icons/elektronika-white.png')}}");
+}
+
+.single-type:nth-child(4) label::before {
+  content: url("{{url_for('static', filename='assets/images/icons/fundusz.png')}}");
+}
+
+.single-type:nth-child(4) input:checked + label::before {
+  content: url("{{url_for('static', filename='assets/images/icons/fundusz-white.png')}}");
+}
+
+.single-type:nth-child(5) label::before {
+  content: url("{{url_for('static', filename='assets/images/icons/leasing.png')}}");
+}
+
+.single-type:nth-child(5) input:checked + label::before {
+  content: url("{{url_for('static', filename='assets/images/icons/leasing-white.png')}}");
+}
+
+.single-type:nth-child(6) label::before {
+  content: url("{{url_for('static', filename='assets/images/icons/smoczek.png')}}");
+}
+
+.single-type:nth-child(6) input:checked + label::before {
+  content: url("{{url_for('static', filename='assets/images/icons/smoczek-white.png')}}");
+}
+</style>
+<script type="text/babel">
+    class App extends React.Component {
+        state = {
+            items:[
+                {id:0, itemName:'Rowerek 1', price:123, givenPrice:699, hots:50, imgUrl:"{{url_for('static', filename='assets/images/watch.jpeg')}}", category:'cat1'},
+                {id:1, itemName:'Rowerek 2', price:321, givenPrice:'', hots:0, imgUrl:"{{url_for('static', filename='assets/images/twarz.png')}}", category:'cat3'},
+                {id:2, itemName:'Rowerek 3', price:999, givenPrice:5, hots:666, imgUrl:"{{url_for('static', filename='assets/images/logo.png')}}", category:'cat2'},
+                {id:3, itemName:'Rowerek 4', price:999, givenPrice:1, hots:69, imgUrl:"{{url_for('static', filename='assets/images/share.png')}}", category:'cat2'},
+                {id:4, itemName:'Rowerek 5', price:5, givenPrice:699, hots:420, imgUrl:"{{url_for('static', filename='assets/images/item.png')}}", category:'cat5'} ,
+                {id:5, itemName:'Rowerek 6', price:444, givenPrice:699, hots:1337, imgUrl:"{{url_for('static', filename='assets/images/item.png')}}", category:'cat6'},
+                {id:6, itemName:'Rowerek 7', price:9876, givenPrice:6469, hots:2137, imgUrl:"{{url_for('static', filename='assets/images/item.png')}}", category:'cat1'},
+                {id:7, itemName:'Rowerek 1', price:123, givenPrice:699, hots:50, imgUrl:"{{url_for('static', filename='assets/images/watch.jpeg')}}", category:'cat7'},
+                {id:8, itemName:'Rowerek 2', price:321, givenPrice:'', hots:0, imgUrl:"{{url_for('static', filename='assets/images/twarz.png')}}", category:'cat3'},
+                {id:9, itemName:'Rowerek 3', price:999, givenPrice:5, hots:666, imgUrl:"{{url_for('static', filename='assets/images/logo.png')}}", category:'cat2'},
+                {id:10, itemName:'Rowerek 4', price:999, givenPrice:1, hots:69, imgUrl:"{{url_for('static', filename='assets/images/share.png')}}", category:'cat5'},
+                {id:11, itemName:'Rowerek 5', price:5, givenPrice:699, hots:420, imgUrl:"{{url_for('static', filename='assets/images/item.png')}}", category:'cat4'} ,
+                {id:12, itemName:'Rowerek 6', price:444, givenPrice:699, hots:1337, imgUrl:"{{url_for('static', filename='assets/images/item.png')}}", category:'cat7'},
+                {id:13, itemName:'Rowerek 7', price:9876, givenPrice:6469, hots:2137, imgUrl:"{{url_for('static', filename='assets/images/item.png')}}", category:'cat6'},
+                {id:14, itemName:'Rowerek 1', price:123, givenPrice:699, hots:50, imgUrl:"{{url_for('static', filename='assets/images/watch.jpeg')}}", category:'cat1'},
+                {id:15, itemName:'Rowerek 2', price:321, givenPrice:'', hots:0, imgUrl:"{{url_for('static', filename='assets/images/twarz.png')}}", category:'cat3'},
+                {id:16, itemName:'Rowerek 3', price:999, givenPrice:5, hots:666, imgUrl:"{{url_for('static', filename='assets/images/logo.png')}}", category:'cat2'},
+                {id:17, itemName:'Rowerek 4', price:999, givenPrice:1, hots:69, imgUrl:"{{url_for('static', filename='assets/images/share.png')}}", category:'cat2'},
+                {id:18, itemName:'Rowerek 5', price:5, givenPrice:699, hots:420, imgUrl:"{{url_for('static', filename='assets/images/item.png')}}", category:'cat5'} ,
+                {id:19, itemName:'Rowerek 6', price:444, givenPrice:699, hots:1337, imgUrl:"{{url_for('static', filename='assets/images/item.png')}}", category:'cat6'},
+                {id:20, itemName:'Rowerek 7', price:9876, givenPrice:6469, hots:2137, imgUrl:"{{url_for('static', filename='assets/images/item.png')}}", category:'cat1'},
+                {id:21, itemName:'Rowerek 1', price:123, givenPrice:699, hots:50, imgUrl:"{{url_for('static', filename='assets/images/watch.jpeg')}}", category:'cat7'},
+                {id:22, itemName:'Rowerek 2', price:321, givenPrice:'', hots:0, imgUrl:"{{url_for('static', filename='assets/images/twarz.png')}}", category:'cat3'},
+                {id:23, itemName:'Rowerek 3', price:999, givenPrice:5, hots:666, imgUrl:"{{url_for('static', filename='assets/images/logo.png')}}", category:'cat2'},
+                {id:24, itemName:'Rowerek 4', price:999, givenPrice:1, hots:69, imgUrl:"{{url_for('static', filename='assets/images/share.png')}}", category:'cat5'},
+                {id:25, itemName:'Rowerek 5', price:5, givenPrice:699, hots:420, imgUrl:"{{url_for('static', filename='assets/images/item.png')}}", category:'cat4'} ,
+                {id:26, itemName:'Rowerek 6', price:444, givenPrice:699, hots:1337, imgUrl:"{{url_for('static', filename='assets/images/item.png')}}", category:'cat7'},
+                {id:27, itemName:'Rowerek 7', price:9876, givenPrice:6469, hots:2137, imgUrl:"{{url_for('static', filename='assets/images/item.png')}}", category:'cat6'}
+            ],
+            actualItem:'empty',
+            typeOfOffer:'',
+            position:0
+        }
+       
+        handleClickShowOffer = (e) => {
+            if(document.querySelector('.margin-bottom')){
+            let deleteSpace = document.querySelector('.margin-bottom')
+            deleteSpace.classList.remove('margin-bottom')
+            }
+            this.setState({
+                actualItem : this.state.items[e.target.parentNode.parentNode.id]
+            })
+            e.target.parentNode.parentNode.nextElementSibling.classList.add('margin-bottom')
+            this.setState({
+                position:
+                    e.target.parentNode.parentNode.getBoundingClientRect().top + 
+                    window.scrollY + e.target.parentNode.parentNode.offsetHeight -130
+            })
+        }
+
+        handleClick = (e) => {
+            if(document.querySelector('.margin-bottom')){
+            let deleteSpace = document.querySelector('.margin-bottom')
+            deleteSpace.classList.remove('margin-bottom')
+            }
+            
+            this.setState({
+                typeOfOffer: e.target.id,
+                actualItem : 'empty'
+            })
+        }
+        handleClickLike = (e) => {
+            e.target.nextElementSibling.classList.toggle('hot-anime')
+            e.target.nextElementSibling.classList.toggle('none')
+            if(e.target.attributes.src.nodeValue ==="{{url_for('static', filename='assets/images/hot.png')}}"){
+               e.target.attributes.src.nodeValue = "{{url_for('static', filename='assets/images/not-hot.png')}}"  
+            }
+            else {
+               e.target.attributes.src.nodeValue = "{{url_for('static', filename='assets/images/hot.png')}}"  
+            }
+            
+        }
+
+        handleCLickExit = () => {
+            let deleteSpace = document.querySelector('.margin-bottom')
+            deleteSpace.classList.remove('margin-bottom')
+            this.setState({
+                actualItem:'empty'
+            })
+        }
+
+        handleClickLike2 = (e) => {     
+
+            let inc = document.querySelector('.increase')
+            let dec = document.querySelector('.decrease')
+            inc.classList.remove('up')
+            dec.classList.remove('up')
+            if(e.target.attributes.src.nodeValue ==="{{url_for('static', filename='assets/images/hot.png')}}"){
+               e.target.attributes.src.nodeValue = "{{url_for('static', filename='assets/images/not-hot.png')}}"
+               dec.classList.add('up')       
+            }
+            else {
+               e.target.attributes.src.nodeValue = "{{url_for('static', filename='assets/images/hot.png')}}"  
+               inc.classList.add('up')
+               
+            }       
+        }
+
+        handleClickReport = () => {
+            const rep = document.getElementById("report1")
+            rep.classList.toggle('none')
+            header.classList.toggle('blur')
+            contentt.classList.toggle('blur')  
+            footer.classList.toggle('blur')
+        }
+        handleClickReport2 = () => { 
+            const rep2 = document.getElementById("report2")
+            const rep = document.getElementById("report1")
+            rep.classList.toggle('none')
+            rep2.classList.toggle('none')
+            
+        }
+        handleClickEndReport = () => {
+            const rep2 = document.getElementById("report2")
+            rep2.classList.toggle('none')
+            header.classList.toggle('blur')
+            contentt.classList.toggle('blur')  
+            footer.classList.toggle('blur')
+        }
+        
+
+        render() {
+            const header = document.getElementById("header");
+            const contentt = document.getElementById("contentt");
+            const footer = document.getElementById("footer");
+
+            const listOfItems = this.state.items.length ? ( 
+              this.state.items.filter( item => item.category === this.state.typeOfOffer)
+              .map(item => {
+            return (
+                <div className="outside-item" key={item.id}>
+                    <div id={item.id} className="single-item" >
+                        <img src="{{url_for('static', filename='assets/images/fav.png')}}" alt="fav"/>
+                        <img src="{{url_for('static', filename='assets/images/share.png')}}" alt="share"/>
+                        <div className="hot">
+                        <img src="{{url_for('static', filename='assets/images/not-hot.png')}}" alt="hot" onClick={this.handleClickLike} />
+                        <div className="none">{item.hots}</div>
+                        </div>
+                        <img className="img" src={item.imgUrl} alt=""/>
+
+                        <h2>{item.itemName}</h2>
+                        <div className="normal-text blue-text">Cena: {item.price}  zł</div>
+                            <a href="#act">
+                                <button className="btn" onClick={this.handleClickShowOffer}>Przejdź do oferty</button>
+                            </a>
+                    </div>
+                <div className="hidden"></div>
+                </div>
+                   )  
+              })   
+                    ) : (
+            <div>Aktualnie nie ma żadnych ofert.</div>
+                        )
+
+
+        const type = this.state.typeOfOffer ? (
+            <div className="line-under-text">Wybierz type ofert</div>
+        ) : (
+            <div className="line-under-text">Oferty dla Ciebie</div>
+        )
+
+        const item = this.state.actualItem
+
+        let position = {
+            top:this.state.position
+        }
+
+        const actualItem = this.state.actualItem !=='empty' ? (
+            
+                <div id="act" className="shown-offer" key={item.id} style={position}>
+                    <div className="shown-offer-mini-img">
+                        <img className="pointer" src="{{url_for('static', filename='assets/images/fav.png')}}" alt="fav"/>
+                    </div>
+                    <div className="shown-offer-mini-img" >
+                        <img src="{{url_for('static', filename='assets/images/not-hot.png')}}" alt="hot" className="pointer" onClick={this.handleClickLike2}/>
+                        <span>{item.hots}</span>
+                        <div className="increase">+ 1</div>
+                        <div className="decrease">- 1</div>
+                    </div>
+
+
+                    <div className="shown-offer-grid">
+                        <div className="shown-offer-img">   
+                            <img src={item.imgUrl} alt=""/>       
+                        </div>
+                        <div className="shown-offer-description">
+                            <h1 className="shown-offer-h1">{item.itemName}</h1> <span>www.loreeem.com</span>
+                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo neque earum,
+                            vitae facere placeat, quos distinctio perspiciatis quasi quas ab nam 
+                            repellendus reiciendis quidem explicabo vel, assumenda quaerat optio possimus.</p>
+                            <span className="pointer" onClick={this.handleClickReport}>Zgłoś ofertę</span> <h2 className="blue-text">{item.price} zł</h2>
+                            <button className="btn">Kup</button>   
+                            <div className="exit-flying" onClick={this.handleCLickExit}>
+                                <img src="{{url_for('static', filename='assets/images/x.png')}}" alt=""/>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+) : ('')
+
+            return(
+<main>          
+    <div>
+        <div id="contentt" className="big-container" >
+            {type} 
+            <div className="types-of-offer">
+                <div className="single-type" >
+                    <input type="radio" id="cat1" name="type" onClick={this.handleClick}/>
+                    <label className="single-type-label" htmlFor="cat1">
+                        <h3>Shrek</h3>
+                    </label>
+                </div>
+                
+                <div className="single-type">
+                    <input type="radio" id="cat2" name="type" onClick={this.handleClick}/>
+                    <label className="single-type-label" htmlFor="cat2">
+                        <h3>Shrek 2</h3>
+                    </label>
+                </div>
+
+
+                <div className="single-type">
+                    <input type="radio" id="cat3" name="type" onClick={this.handleClick}/>
+                    <label className="single-type-label" htmlFor="cat3">
+                        <h3>Shrek 3</h3>
+                    </label>
+                </div>
+
+
+                <div className="single-type">
+                    <input type="radio" id="cat4" name="type" onClick={this.handleClick}/>
+                    <label className="single-type-label" htmlFor="cat4">
+                        <h3>Shrek 4</h3>
+                    </label>
+                </div>
+
+
+                <div className="single-type">
+                    <input type="radio" id="cat5" name="type" onClick={this.handleClick}/>
+                    <label className="single-type-label" htmlFor="cat5">
+                        <h3>Shrek Forever</h3>
+                    </label>
+                </div>
+
+                
+                <div className="single-type">
+                    <input type="radio" id="cat6" name="type" onClick={this.handleClick}/>
+                    <label className="single-type-label" htmlFor="cat6">
+                        <h3>Shrek 5</h3>
+                    </label>
+                </div>
+            </div>
+
+            <div className="sort">
+            <div className="text" >Sortuj według:    </div>
+                <div className="select">
+                    <select name="sort-1" id="sort-1">
+                        <option value="0">Nazwy</option>
+                        <option value="1">Kategorii</option>
+                        <option value="2">Ceny</option>
+                        <option value="3">Popularności</option>
+                    </select>
+                </div>
+            </div>
+            <div className="sort" >
+            <div className="text">Cena:</div>
+                <div className="select">
+                    <select name="sort-2" id="sort-2">
+                        <option value="1">Malejąco</option>
+                        <option value="2">Rosnąco</option>
+                    </select>
+                </div>
+            </div>
+            <div className="container-offers">
+            {listOfItems}
+            {actualItem}
+            </div>
+        </div>   
+       
+        <div id="report1" className="report none">
+            <div className="exit-flying" onClick={this.handleClickReport}>
+                <img src="{{url_for('static', filename='assets/images/x.png')}}" alt=""/>
+            </div>
+            <h3 className="purple-text">ZGŁOŚ OFERTĘ</h3>
+            <h3>Dlaczego chcesz ją zgłosić?</h3>
+            <input name="rep" id="rep1" type="checkbox"/>
+            <label className="rep-label" htmlFor="rep1">SPAM</label>
+            <input name="rep" id="rep2" type="checkbox"/>
+            <label className="rep-label" htmlFor="rep2">PORNOGRAFIA</label>
+            <input name="rep" id="rep3" type="checkbox"/>
+            <label className="rep-label" htmlFor="rep3">ODRZUCAJĄCE TREŚCI</label>
+            <button onClick={this.handleClickReport2} className="btn">ZGŁOŚ</button>
+        </div>
+
+        <div id="report2" className="report none">
+            <h3 className="purple-text">ZGŁOŚ OFERTĘ</h3>
+            <h3>DZIĘKUJEMY ZA ZGŁOSZENIE OFERTY</h3>
+            <p>Właściciel oferty dostanie 100zł grzywny albo 25 lat wiezienia</p>
+            <img className="rep-img" src="{{url_for('static', filename='assets/images/twarz.png')}}" alt=""/>
+            <button onClick={this.handleClickEndReport} className="btn">GOTOWE</button>
+        </div>
+    </div>
+</main> 
+
+            )
+        }
+    }
+    ReactDOM.render(<App/>, document.getElementById('App'));
+</script>
+{% endblock content %}
