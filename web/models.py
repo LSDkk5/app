@@ -22,7 +22,7 @@ class User(db.Model, UserMixin):
         db.String(100),
         unique=False,
         nullable=False,
-        default='/users/img/default.png')
+        default='/static/images/users/default.png')
 
     def __repr__(self):
         return f"{self.id}, {self.username}, {self.email}"

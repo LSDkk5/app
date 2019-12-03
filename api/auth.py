@@ -16,6 +16,8 @@ class Login(Resource):
         loginData = {
             'username': request.json['username'],
             'password': request.json['password']}
+        if loginData['username'] is None or loginData['password'] is None:
+            return abort(400, description='Brakujące argumenty')
         user = User.query.filter_by(username=loginData['username']).first()
         if user and bcrypt.check_password_hash(
             user.password, loginData['password']):
@@ -57,8 +59,47 @@ class Register(Resource):
         db.session.commit()
         return jsonify(message='Twoje konto zostało pomyślnie utworzone! Na adres e-mail została wysłana wiadomość z linkiem aktywacyjnym - prosimy aktywować konto.')
 
+class ConfirmAccount(Resource):
+    def post(self, confirmToken):
+        try:
+            email = confirm_token(confirmToken)
+        except BaseException:
+            return abort(403, description='Token aktywujący wygasł, lub jest niepoprawny!')
+        user = User.query.filter_by(email=email).first()
+        if user.confirmed:
+            return abort(403, description='To konto zostało już aktywowane.')
+        else: 
+            user.confirmed = True
+            db.session.commit()
+        return jsonify(message='Konto zostało pomyślnie aktywowane! Dziękujemy')
+
+class ResendConfirmToken(Resource):
+    def get(self):
+        user = User.query.filter_by(username='lsd').first()
+        login_user(user)
+        if not current_user.is_authenticated:
+            return abort(403)
+        if current_user.confirmed:
+            return abort(403)
+        user = User.query.filter_by(username=current_user.username).first_or_404()
+        token = generate_confirmation_token(user.email)
+        send_email(
+            user.email,
+            'Aktywacja Konta',
+            render_template(
+                'auth/activate.html',
+                confirm_url=url_for(
+                    'auth.confirm_account',
+                    token=token,
+                    _external=True)))
+        return jsonify(message='Na twoj adres email został wysłany link potwierdzający!')
+        
+
 api.add_resource(Login, '/api/v1.0/auth/login')
 api.add_resource(Register, '/api/v1.0/auth/register')
+api.add_resource(ResendConfirmToken, '/api/v1.0/auth/resendtoken')
+api.add_resource(ConfirmAccount, '/api/v1.0/auth/confirm/<confirmToken>')
+
 
 
 
