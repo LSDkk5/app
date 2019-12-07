@@ -18,7 +18,7 @@ class Login(Resource):
             'password': request.json['password']}
         if loginData['username'] is None or loginData['password'] is None:
             return abort(400, description='Brakujące argumenty')
-        user = User.query.filter_by(username=loginData['username']).first()
+        user = User.objects(username=loginData['username']).first()
         if user and bcrypt.check_password_hash(
             user.password, loginData['password']):
             login_user(user)
@@ -32,8 +32,8 @@ class Register(Resource):
             'username': request.json['username'],
             'password': request.json['password'],
             'email': request.json['email']}
-        user = User.query.filter_by(username=registerData['username']).first()
-        userEmail = User.query.filter_by(email=registerData['email']).first()
+        user = User.objects(username=registerData['username']).first()
+        userEmail = User.objects(email=registerData['email']).first()
 
         if user:
             return abort(403, description='Użytkownik o podanej nazwie już istnieje!')
@@ -43,10 +43,8 @@ class Register(Resource):
             username=registerData['username'],
             password=bcrypt.generate_password_hash(
                 registerData['password']),
-            email=registerData['email'],
-            registered_on=datetime.now())
+            email=registerData['email']).save()
         token = generate_confirmation_token(newUser.email)
-        db.session.add(newUser)
         send_email(
             newUser.email,
             'Aktywacja Konta',
@@ -56,32 +54,31 @@ class Register(Resource):
                     'auth.confirm_account',
                     token=token,
                     _external=True)))
-        db.session.commit()
         return jsonify(message='Twoje konto zostało pomyślnie utworzone! Na adres e-mail została wysłana wiadomość z linkiem aktywacyjnym - prosimy aktywować konto.')
 
 class ConfirmAccount(Resource):
     def post(self, confirmToken):
         try:
-            email = confirm_token(confirmToken)
+            emailp = confirm_token(confirmToken)
         except BaseException:
             return abort(403, description='Token aktywujący wygasł, lub jest niepoprawny!')
-        user = User.query.filter_by(email=email).first()
+        # if not emailp: return abort(403, description='Coś poszło nie tak, skontaktuj sie z administratorem serwisu!')
+        user = User.objects(username='LSD').first_or_404()
         if user.confirmed:
             return abort(403, description='To konto zostało już aktywowane.')
         else: 
-            user.confirmed = True
-            db.session.commit()
+            user.update(confirmed=True)
         return jsonify(message='Konto zostało pomyślnie aktywowane! Dziękujemy')
 
 class ResendConfirmToken(Resource):
     def get(self):
-        user = User.query.filter_by(username='lsd').first()
+        user = User.objects(username='LSD').first()
         login_user(user)
         if not current_user.is_authenticated:
             return abort(403)
         if current_user.confirmed:
             return abort(403)
-        user = User.query.filter_by(username=current_user.username).first_or_404()
+        user = User.objects(username=current_user.username).first_or_404()
         token = generate_confirmation_token(user.email)
         send_email(
             user.email,
@@ -99,99 +96,3 @@ api.add_resource(Login, '/api/v1.0/auth/login')
 api.add_resource(Register, '/api/v1.0/auth/register')
 api.add_resource(ResendConfirmToken, '/api/v1.0/auth/resendtoken')
 api.add_resource(ConfirmAccount, '/api/v1.0/auth/confirm/<confirmToken>')
-
-
-
-
-
-
-
-# @api_auth.route('/api/login', methods=['POST'])
-# def login_controller():
-#     loginData = {
-#         'username': request.json['username'],
-#         'password': request.json['password']}
-#     user = User.query.filter_by(username=loginData['username']).first()
-#     if user and bcrypt.check_password_hash(
-#             user.password, loginData['password']):
-#         login_user(user)
-#     else:
-#         return jsonify(403)
-#     return jsonify(200)
-
-
-# @api_auth.route('/api/register', methods=['POST'])
-# def register_controller():
-#     registerData = {
-#         'username': request.json['username'],
-#         'password': request.json['password'],
-#         'email': request.json['email']}
-#     user = User.query.filter_by(username=registerData['username']).first()
-#     userEmail = User.query.filter_by(email=registerData['email']).first()
-
-#     if user:
-#         return jsonify(403, description='Użytkownik o podanej nazwie już istnieje!')
-#     elif userEmail:
-#         return abort(403, description='Konto o podanym adresie email już istnieje! prosimy o podanie innego.')
-#     newUser = User(
-#         username=registerData['username'],
-#         password=bcrypt.generate_password_hash(
-#             registerData['password']),
-#         email=registerData['email'],
-#         registered_on=datetime.now())
-#     db.session.add(newUser)
-#     db.session.commit()
-
-#     token = generate_confirmation_token(newUser.email)
-#     return jsonify(200, token)
-
-
-# @api_auth.route('/api/account/confirm/<token>')
-# def confirm_account_controller(token):
-#     try:
-#         email = confirm_token(token)
-#     except BaseException:
-#         return jsonify(403)
-#     user = User.query.filter_by(email=email).first_or_404()
-#     if user.confirmed:
-#         return jsonify(403)
-#     else:
-#         user.confirmed = True
-#         db.session.commit()
-#     return jsonify(200)
-
-
-# @api_auth.route('/api/resend/token', methods=['POST'])
-# def resend_confirm_token():
-#     if current_user.is_authenticated:
-#         if not current_user.confirmed:
-#             user = User.query.filter_by(
-#                 username=current_user.username).first_or_404()
-#             token = generate_confirmation_token(user.email)
-#             send_email(to=user.email, subject='test', template=token)
-#     else:
-#         return jsonify(404)
-
-
-# @api_auth.route('/api/password/forget', methods=['POST'])
-# def forget_password_controller():
-#     email = request.json['email']
-#     user = User.query.filter_by(email=email).first()
-#     if not user:
-#         return jsonify(403)
-#     token = generate_confirmation_token(email)
-#     return jsonify(token)
-
-
-# @api_auth.route('/api/password/r<token>', methods=['POST'])
-# def reset_password_controller(token):
-#     newPassword = request.json['password']
-#     try:
-#         email = confirm_token(token)
-#     except BaseException:
-#         return jsonify(403)
-
-#     user = User.query.filter_by(email=email).first_or_404()
-#     user.password = bcrypt.generate_password_hash(newPassword)
-#     db.session.commit()
-#     return jsonify(200)

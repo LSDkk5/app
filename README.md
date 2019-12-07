@@ -4,31 +4,20 @@
 
 ```sh
 $ virtualenv auth
-$ cd auth
-$ source bin/active
-$ git clone https://github.com/LSDkk5/auth
+$ cd auth && source bin/active
+$ git clone https://github.com/LSDkk5/app
 $ pip install -r src/REQUIREMENTS.txt
 ```
 
 ### Db config
-#### database.json
+#### settings.py line 27
 
-```json
-{
-    "host": "yourhost",
-    "port": 5432,
-    "database": "database",
-    "user": "user",
-    "password": "password"
-}
+```python
+MONGODB_SETTINGS = {
+        'db': '<your_database_name>',
+        'host': '<database_host>'
+    }
 ```
-
-### Init database
-
-```sh
-$ python initdb.py
-```
-
 ### Run development server
 
 ```sh

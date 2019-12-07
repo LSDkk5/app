@@ -38,16 +38,18 @@ def register():
         return redirect(url_for('home.home_page'))
     form = RegistrationForm()
     if form.validate_on_submit():
+        user = User.objects(username=form.username.data).first()
+        userEmail = User.objects(email=form.email.data).first()
+
+        if user:
+            flash('Podana nazwa użytkownika jest już zajęta!', 'danger')
+        elif userEmail:
+            return flash('Konto o podanym adresie email już istnieje! prosimy o podanie innego.', 'danger')
         newUser = User(
             username=form.username.data,
             email=form.email.data,
             password=bcrypt.generate_password_hash(
-                form.password.data),
-            registered_on=datetime.now().strftime('%m-%d-%Y'),
-            registered_time=datetime.now().strftime('%H:%M'))
-        print(newUser)
-        db.session.add(newUser)
-        db.session.commit()
+                form.password.data)).save()
 
         token = generate_confirmation_token(newUser.email)
         send_email(
@@ -59,7 +61,6 @@ def register():
                     'auth.confirm_account',
                     token=token,
                     _external=True)))
-        login_user(newUser)
         flash('Twoje konto zostało pomyślnie utworzone! Na podany adres e-mail wyslaliśmy wiadomość z linkiem aktywacyjnym. Prosimy aktywować  swoje konto aby mieć dostęp do pełnej wersji strony', 'success')
         return redirect(url_for('home.home_page'))
     return render_template('/auth/register.html', form=form)
@@ -71,12 +72,11 @@ def confirm_account(token):
         email = confirm_token(token)
     except BaseException:
         flash('Link potwierdzający jest nieprawidłowy lub wygasł!.', 'danger')
-    user = User.query.filter_by(email=email).first_or_404()
+    user = User.objects(email=email).first_or_404()
     if user.confirmed:
         flash('Twoje konto zostało już wcześniej potwierdzone!', 'info')
     else:
-        user.confirmed = True
-        db.session.commit()
+        user.update(confirmed=True)
         flash('Aktywacja konta przebiegła pomyślnie. Dziękujemy!', 'success')
     return redirect(url_for('home.home_page'))
 
@@ -88,7 +88,7 @@ def forget_password():
     else:
         form = ResetPasswordForm()
         if form.validate_on_submit():
-            user = User.query.filter_by(email=form.email.data).first()
+            user = User.objects(email=form.email.data).first()
             if user.last_change + timedelta(minutes=30) <= datetime.now():
                 if user:
                     token = generate_confirmation_token(user.email)
@@ -127,11 +127,10 @@ def reset_password(token):
             flash(
                 'Link resetujący hasło wygasł, lub jest nieprawidłowy!',
                 'danger')
-        user = User.query.filter_by(email=email).first_or_404()
+        user = User.objects(email=email).first_or_404()
         if user.last_change + timedelta(minutes=30) <= datetime.now():
-            user.password = bcrypt.generate_password_hash(form.password.data)
-            user.last_change = datetime.now()
-            db.session.commit()
+            user.update(password=bcrypt.generate_password_hash(form.password.data))
+            user.update(last_password_change=datetime.now())
             flash(
                 'Twoje hasło zostało pomyślnie zresetowane!, teraz możesz się zalogować.',
                 'success')
