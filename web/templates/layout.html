@@ -11,65 +11,22 @@
     <link rel="stylesheet" href="{{url_for('static', filename='styles/fonts/fonts.css')}}">
 
     <link rel="stylesheet" href="{{url_for('static', filename='styles/footer.css')}}">
-    <link rel="stylesheet" href="{{url_for('static', filename='styles/navDeskop.css')}}">
-    <link rel="stylesheet" href="{{url_for('static', filename='styles/navMobile.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='styles/headers.css')}}">
+    
 </head>
 <body>
-    <header>
-        <div class="header">
-            <a href="#default" class="logo"><img src="{{url_for('static', filename='assets/images/logo.png')}}"></a>
-            <nav class="header-right">
-            {% if current_user.is_authenticated %}
-                <a href="#home">Oferty</a>
-                <a href="#">{{ current_user.username }}</a>
-            {% else %}
-                <a href="#home">O Nas</a>
-                <a href="#contact">Kontakt</a>
-                <a href="#about">Logowanie</a>
-            {% endif %}
-            </nav>
-        </div>
-    </header>
-<script type="text/babel">
-    class headerMobile extends Component {
-        handleClick = () => {
-            const hamburger = document.querySelector('.hamburger');
-            const navigation = document.querySelector('.navigation');
-            hamburger.classList.toggle('hamburger-active');
-            navigation.classList.toggle('navigation-active');
-        }
-        render(){
-        return(   
-                <header>  
-                    <div class="header-mobile">
-                        <img src="{{url_for('static', filename='assets/images/logo.png')}}"/>
-                        <button class="hamburger" onClick={this.handleClick}>
-                            <span class="hamburger-box">
-                                <span class="hamburger-inner "></span>
-                            </span>
-                        </button>
-                        <div class="navigation">
-                            <ul class="navigation-list">
-                                <li class="navigation-item"><NavLink exact to="/">Home</NavLink></li>
-                                <li class="navigation-item"><NavLink to="/a">O nas</NavLink></li>
-                                <li class="navigation-item"><NavLink to="/w">Kontakt</NavLink></li>
-                                <li class="navigation-item"><NavLink to="/b">Logowanie</NavLink></li>
-                            </ul>
-                        </div> 
-                    </div>
-                    <div class="filler-mobile"></div>
-                </header>         
-            )
-        }
-    }
-</script>
+
+
 {% if request.path == '/login' or request.path == '/register' %}
     {% block auth %}
     
     {% endblock auth %}       
 {% else %}
-<div id="App">  
-</div>                  
+
+<div class="Header"></div>
+
+<div id="App"></div> 
+
     <footer>
         <div class="footer">
             <a>CoZa500Plus.pl</a>
@@ -80,6 +37,256 @@
             </div>
         </div>
     </footer>
+
+<script type="text/babel">
+
+        class Header extends React.Component {
+    
+            state = {
+                mobileHeader:false,
+                loggedIn:true, //HEADER DLA NIEZALOGOWANEGO: loggedIn:false
+                user:''
+            }
+    
+            getData =  () => {
+            fetch('https://jsonplaceholder.typicode.com/todos/1')
+            .then(res => {
+                return res.json();
+            })
+            .then(data => {
+                this.setState({
+                    user:data
+                })
+                console.log(data)
+                return data;
+            })
+            .catch(err => {
+                console.log(err);
+            })
+            };
+    
+    
+            componentDidMount(){
+                window.addEventListener('resize', () => {
+                if(window.innerWidth < 715 || window.innerHeight < 500){this.setState({mobileHeader:true})}
+                else{this.setState({mobileHeader:false})}
+                }, true);
+                window.addEventListener('load', () => {
+                if(window.innerWidth < 715 || window.innerHeight < 500) {
+                    this.setState({mobileHeader:true})
+                } else {
+                    this.setState({mobileHeader:false})
+                }
+    
+                fetch('https://jsonplaceholder.typicode.com/todos/1') //URL do usera (na razie wrzucone fake api)
+                .then(res => {
+                    return res.json();
+                })
+                .then(data => {
+                    this.setState({
+                        user:data
+                    })
+                    console.log(data)
+                    return data;
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+    
+                });
+            }
+    
+           
+    
+            handleClick = () => {
+            const hamburger = document.querySelector('.ham1');
+            const navigation = document.querySelector('.nav1');
+            hamburger.classList.toggle('hamburger-active');
+            navigation.classList.toggle('navigation-active');
+            }
+    
+            HandleClickOpenNot = () => {
+                let opt = document.querySelector('.nav-options-list');
+                let not = document.querySelector('.notification-list');
+                not.classList.toggle('none');
+                if(!opt.classList.contains('none')){
+                    opt.classList.toggle('none');    
+                }
+            }
+            HandleClickOpenOpt = () => {
+                let opt = document.querySelector('.nav-options-list');
+                let not = document.querySelector('.notification-list');
+                opt.classList.toggle('none')
+                if(!not.classList.contains('none')){
+                    not.classList.toggle('none');    
+                }
+            }
+    
+    
+        render() {   
+            //MOBILNE - ZALOGOWANY, OPCJE NA ZEWNATRZ     // Tu bedzie nazwa usera+img usera
+          const mobileLoggedInOutside= (
+        <div className="nav-g"> 
+            <div className="grid">  
+                <div className="nav-user-img">
+                    <img src="{{url_for('static', filename='assets/images/fakeUser.png')}}" alt=""/>
+                </div>
+                <div className="nav-user-name"><a href="">NazwaTypka</a></div> 
+                    
+            </div>
+        </div> 
+          )
+          ///////////////////////////////
+    
+         //MOBILNE - ZALOGOWANY, OPCJE W SRODKU
+          const mobileLoggedInInside= (
+                <ul className="navigation-list">
+                    <li className="navigation-item"><a href="/">Home</a></li>
+                    <li className="navigation-item"><a href="/a">O nas</a></li>
+                    <li className="navigation-item"><a href="/w">Kontakt</a></li>
+                    <div className="break-line"></div>  
+                    <li className="navigation-item"><a href="/">Profil</a></li>
+                    <li className="navigation-item"><a href="/a">Oferty</a></li>
+                    <li className="navigation-item"><a href="/w">Bachory</a></li>
+                    <div className="break-line"></div>   
+                    <li className="navigation-item"><a href="/a">Loreeem</a></li>
+                    <li className="navigation-item"><a href="/w">Ipsum</a></li>  
+                    <div className="break-line"></div>               
+                </ul>
+          )
+          ///////////////////////////////
+    
+        //MOBILNE - NIEZALOGOWANY, OPCJE NA ZEWNATRZ
+          const mobileLoggedOutOutside = (
+            <a href="zaloguj"><div className="basic-nav-out">zaloguj się</div> </a>    
+          )
+          /////////////////////////
+    
+          //MOBILNE - NIEZALOGOWANY, OPCJE W SRODKU
+          const mobileLoggedOutInside = (
+                <ul className="navigation-list">
+                    <li className="navigation-item"><a href="/">Utwórz darmowe konto!</a></li>
+                    <div className="break-line"></div>
+                    <li className="navigation-item"><a href="/">Home</a></li>
+                    <li className="navigation-item"><a href="/a">O nas</a></li>
+                    <li className="navigation-item"><a href="/w">Kontakt</a></li>
+                    <div className="break-line"></div>                      
+                </ul>
+          )
+            /////////////////////////
+            ///////////* KONIEC MOBILNYCH */////////////////////////    Tu bedzie nazwa usera+img usera
+            
+          const deskopLoggedIn =(
+            <nav className="header-right">
+                        <a className="basic-nav" href="#home">O Nas</a>
+                        <a className="basic-nav" href="#contact">Kontakt</a>
+                        <div className="nav-grid">
+                            <div className="nav-vertical-line"></div>    
+                            <a href="">
+                                <div className="nav-user-img">
+                                    <img src="{{url_for('static', filename='assets/images/fakeUser.png')}}" alt="user"/>
+                                </div>
+                            </a>                  
+                            <div className="nav-user-name"><a href="">NazwaTypka</a></div>
+                                                        
+                                <a className="pt" href="#about">(wyloguj)</a>
+                                
+                            <div className="notification">
+                                <div className="open-notification" onClick={this.HandleClickOpenNot}>
+                                    <img src="{{url_for('static', filename='assets/images/fakeBell.png')}}" alt=""/>
+                                </div>
+                                <div className="notification-list none">
+                                    <ul>
+                                        <li className="notification-item">
+                                            <a href="">Oferty</a>
+                                        </li>
+                                        <li className="notification-item">
+                                            <a href="">Bachory</a>
+                                        </li>
+                                        <li className="notification-item">
+                                            <a href="">Cos jeszcze</a>
+                                        </li>
+                                        <li className="notification-item">
+                                            <a href="">Cos jeszcze</a>
+                                        </li>
+                                        <li className="notification-item">
+                                            <a href="">Oferty</a>
+                                        </li>
+                                        <li className="notification-item">
+                                            <a href="">Oferty</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div className="nav-options">
+                                <div className="nav-open-options-triangle" onClick={this.HandleClickOpenOpt}></div>
+                                <div className="nav-options-list none">
+                                    <ul>
+                                        <li className="nav-option">
+                                            <a href="">Opcja 1aaaa aaaaa a aa a aaa a a asd sd </a>
+                                        </li>
+                                        <li className="nav-option">
+                                            <a href="">asdf asdf asdf asdf asdf asdf asdf asdf asdf asdf sadf asdaadasdasdsada asdas</a>
+                                        </li>
+                                        <li className="nav-option">
+                                            <a href="">Opcja 3</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+          ) ;
+          const deskopLoggedOut= (
+            <nav className="header-right">
+                <a className="basic-nav" href="#home">O Nas</a>
+                <a className="basic-nav" href="#contact">Kontakt</a>
+                <a className="basic-nav" href="#contact">Zaloguj się</a>
+            </nav>
+          )
+          
+          //SPRAWDZENIE CZY ZALOGOWANY
+          const isLoggedMobileIn = this.state.loggedIn ? (mobileLoggedInInside) : (mobileLoggedOutInside)
+          const isLoggedMobileOut = this.state.loggedIn ? (mobileLoggedInOutside) : (mobileLoggedOutOutside)
+          const isLoggedDeskop = this.state.loggedIn ? (deskopLoggedIn) : (deskopLoggedOut)
+          /////////////////////////////  
+
+            const header = this.state.mobileHeader ? (
+                <header>  
+                    <div className="header-mobile">
+                        <img src="{{url_for('static', filename='assets/images/logo.png')}}"/>
+                        {isLoggedMobileOut}
+                        <button className="hamburger ham1" onClick={this.handleClick}>
+                            <span className="hamburger-box">
+                                <span className="hamburger-inner "></span>
+                            </span>
+                        </button>
+                        
+                    <nav className="navigation nav1">
+                        {isLoggedMobileIn}
+                    </nav> 
+                    </div>
+                    <div className="filler-mobile"></div>
+                </header>  
+            ) : (
+                <header>
+                    <div className="header sticky">
+                    <a href="#default" className="logo">
+                        <img src="{{url_for('static', filename='assets/images/logo.png')}}"/>
+                    </a>
+                        {isLoggedDeskop}
+                    </div>
+                    <div className="filler"></div>
+                </header>
+            )
+           
+            return ( 
+                <div>{header}</div>
+            )
+        }            
+    }     
+    ReactDOM.render(<Header/>, document.getElementById('Header'));
+</script>
     {% block content %}
     
     {% endblock content %}
