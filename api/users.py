@@ -1,8 +1,10 @@
 from flask_restful import Resource
 from flask import Blueprint, request, jsonify, abort
+from flask_login import login_user
 
 from web.models import User as UserModel
-from web import api
+from web.models import Kid
+from web import api, db
 
 api_users = Blueprint('api_users', __name__)
 
@@ -17,6 +19,14 @@ class User(Resource):
         user = UserModel.objects(username=username).first_or_404()
         return jsonify(user=dict(username=user.username, email=user.email, 
             confirmed=user.confirmed, regstered_date=user.registered_date))
+
+class UpdateUser(Resource):
+    def put(self, user_oid):
+        pass
+
+class DeleteUser(Resource):
+    def delete(self, user_oid):
+        pass
 
 api.add_resource(UserList, '/api/v1.0/users')
 api.add_resource(User, '/api/v1.0/users/<username>')

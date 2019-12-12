@@ -30,13 +30,13 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Zarejestruj się')
 
     def validate_username(self, username):
-        user = User.query.filter_by(username=username.data).first()
+        user = User.objects(username=username.data).first()
         if user:
             raise ValidationError(
                 'Użytkownik o podanej nazwie jest już zarejestrowany!')
 
     def validate_email(self, email):
-        mail = User.query.filter_by(email=email.data).first()
+        mail = User.objects(email=email.data).first()
         if mail:
             raise ValidationError(
                 message='Podany adres jest już w naszej bazie!')

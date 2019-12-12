@@ -1,0 +1,171 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 68.5%;
+}
+
+
+@media (min-width: 768px) {
+  body {
+    font-size: 1.8rem;
+  }
+}
+
+body {
+  font-size: 2.4rem;
+}
+
+.main {
+  color: black;
+  margin: 0 auto;
+}
+
+.primary--text {
+  color: #6743C3;
+  font-weight: 800;
+}
+
+.btn {
+  color: #fff;
+  border: 0;
+  background: 0;
+  cursor: pointer;
+  width: auto;
+}
+
+.icon {
+  margin: 0 1rem;
+}
+
+.settings {
+  position: absolute;
+  top: 1rem;
+  right: 2rem;
+  display: flex;
+  text-transform: uppercase;
+}
+
+.user-info__container {
+  background-color: #6743C3;
+}
+
+.user-info__inner {
+  position: relative;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: row;
+  color: #fff;
+  justify-content: center;
+  max-width: 75%;
+  min-width: 32rem;
+  margin: 0 auto;
+}
+
+.user-avatar__container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40%;
+}
+
+.user-avatar {
+  border-radius: 50%;
+}
+
+.bio__container {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  padding: 0 4rem;
+}
+
+.bio__username {
+  font-weight: 800;
+  padding: 1rem 0;
+}
+
+.bio__liked {
+  padding: 1rem 0;
+}
+
+.bio__header {
+  margin: 4rem 0 0 0;
+}
+
+.row {
+  margin: 5rem auto;
+  max-width: 75%;
+  min-width: 32rem;
+}
+
+.row-header {
+  text-align: left;
+  margin-bottom: 2rem;
+}
+
+.row-header h3,
+.row-header p {
+  margin: 0;
+}
+
+.items {
+  display: flex;
+  justify-content: center;
+}
+
+.card {
+  background-color: #fff;
+  padding: 2rem;
+  width: 33%;
+  border-radius: 2.5rem;
+  margin: 1.5rem;
+  padding: 3rem 0;
+}
+
+.card-avatar {
+  padding-bottom: 1rem;
+}
+
+.card-content {
+  color: #6743C3;
+  font-weight: 800;
+  display: block;
+}
+
+.card-content span {
+  display: block;
+}
+
+.card-actions {
+  padding-top: 1.5rem;
+}
+
+.card-actions a {
+  color: #000;
+  font-weight: 800;
+  text-decoration: underline;
+}
+
+.divider {
+  margin: 2rem auto;
+  width: 80%;
+  height: 2rem;
+  background-color: #fff;
+  border-radius: 2.5rem;
+  position: relative;
+  border: 0.1rem solid #c2c2c2;
+}
+
+.divider::before {
+  content: '';
+  width: 45%;
+  height: 100%;
+  background-color: #2F7FDD;
+  position: absolute;
+  border-radius: 2.5rem;
+  left: 0;
+}

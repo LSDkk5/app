@@ -6,7 +6,9 @@ Click==7.0
 Flask==1.1.1
 Flask-Bcrypt==0.7.1
 Flask-JWT-Extended==3.20.0
-Flask-Wtforms
+Flask-WTF
+Flask-restful
+pymongo[srv]
 Flask-MongoEngine
 Flask-Login==0.4.1
 Flask-Mail==0.9.1

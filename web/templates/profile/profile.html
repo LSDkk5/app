@@ -1,0 +1,129 @@
+{% extends "layout.html" %}
+
+{% block style %}<link rel="stylesheet" href="{{url_for('static', filename='styles/profile.css')}}">{% endblock style %}
+{% block title %}{% endblock title %}
+
+{% block content %}
+<script type="text/babel">
+  class App extends React.Component {
+    render() {
+      return (
+        <main className="main">
+          <section className="user-info__container">
+            <div className="user-info__inner">
+              <button className="settings btn">
+                Edytuj profil
+                <i className="fas fa-cog icon" />
+              </button>
+              <div className="user-avatar__container">
+                <img src="https://picsum.photos/150/150" className="user-avatar" />
+              </div>
+              <article className="bio__container">
+                <span className="bio__username">Nazwa użytkownika</span>
+                <span className="bio__liked">Polubione oferty: 25</span>
+                <h3 className="bio__header">Bio:</h3>
+                <p className="bio__content">Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  Fugiat, corrupti? Delectus amet perspiciatis facere!
+                  Sint ipsum quod, est odio adipisci reprehenderit itaque,
+                   esse ex aspernatur iure, ab quam eveniet labore.</p>
+              </article>
+            </div>
+          </section>
+
+          <section className="row">
+            <header className="row-header">
+              <h3 className="primary--text">Moja rodzina:</h3>
+              <p>Edytuj oraz przeglądaj profile twojej rodziny.</p>
+            </header>
+            <div className="items">
+              <div className="card">
+                <div className="card-avatar">
+                  <img src="https://picsum.photos/150/150" className="user-avatar" />
+                </div>
+                <div className="card-content">
+                  <span className="primary--text">Imie</span>
+                  <span className="primary--text">2 lata</span>
+                </div>
+                <div className="card-actions">
+                  <a href="#edit">edytuj dane</a>
+                </div>
+              </div>
+              <div className="card">
+                <div className="card-avatar">
+                  <img src="https://picsum.photos/150/150" className="user-avatar" />
+                </div>
+                  <div className="card-content">
+                    <span className="primary--text">Imie</span>
+                    <span className="primary--text">2 lata</span>
+                  </div>
+                  <div className="card-actions">
+                    <a href="#edit">edytuj dane</a>
+                  </div>
+              </div>
+              <div className="card">
+                <div className="card-avatar">
+                  <img src="https://picsum.photos/150/150" className="user-avatar" />
+                </div>
+                <div className="card-content">
+                  <span className="primary--text">Imie</span>
+                  <span className="primary--text">2 lata</span>
+                </div>
+                <div className="card-actions">
+                  <a href="#edit">edytuj dane</a>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section className="row">
+            <header className="row-header">
+              <h3 className="primary--text">Polubione oferty:</h3>
+              <p>Zobacz oferty które polubiłes.</p>
+            </header>
+            <div className="items">
+              <div className="card">
+                <div className="card-avatar">
+                  <img src="https://picsum.photos/150/150" className="user-avatar" />
+                  </div>
+                  <div className="card-content">
+                    <span className="primary--text">Imie</span>
+                    <span className="primary--text">2 lata</span>
+                  </div>
+                  <div className="card-actions">
+                    <a href="#edit">edytuj dane</a>
+                  </div>
+                </div>
+                <div className="card">
+                  <div className="card-avatar">
+                    <img src="https://picsum.photos/150/150" className="user-avatar" />
+                  </div>
+                  <div className="card-content">
+                    <span className="primary--text">Imie</span>
+                    <span className="primary--text">2 lata</span>
+                  </div>
+                  <div className="card-actions">
+                    <a href="#edit">edytuj dane</a>
+                  </div>
+                </div>
+                <div className="card">
+                  <div className="card-avatar">
+                    <img src="https://picsum.photos/150/150" className="user-avatar"/>
+                  </div>
+                    <div className="card-content">
+                      <span className="primary--text">Imie</span>
+                      <span className="primary--text">2 lata</span>
+                    </div>
+                    <div className="card-actions">
+                      <a href="#edit">edytuj dane</a>
+                    </div>
+                  </div>
+                </div>
+          </section>
+          <div className="divider"></div>
+        </main>
+      )
+    }
+  }
+  ReactDOM.render(<App />, document.getElementById('App'));
+</script>
+{% endblock content %}

@@ -12,21 +12,15 @@
 
     <link rel="stylesheet" href="{{url_for('static', filename='styles/footer.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='styles/headers.css')}}">
-    
 </head>
 <body>
-
-
 {% if request.path == '/login' or request.path == '/register' %}
     {% block auth %}
     
     {% endblock auth %}       
 {% else %}
-
 <div class="Header"></div>
-
 <div id="App"></div> 
-
     <footer>
         <div class="footer">
             <a>CoZa500Plus.pl</a>
@@ -37,11 +31,8 @@
             </div>
         </div>
     </footer>
-
 <script type="text/babel">
-
         class Header extends React.Component {
-    
             state = {
                 mobileHeader:false,
                 loggedIn:true, //HEADER DLA NIEZALOGOWANEGO: loggedIn:false
@@ -124,7 +115,6 @@
     
     
         render() {   
-            //MOBILNE - ZALOGOWANY, OPCJE NA ZEWNATRZ     // Tu bedzie nazwa usera+img usera
           const mobileLoggedInOutside= (
         <div className="nav-g"> 
             <div className="grid">  
@@ -136,9 +126,6 @@
             </div>
         </div> 
           )
-          ///////////////////////////////
-    
-         //MOBILNE - ZALOGOWANY, OPCJE W SRODKU
           const mobileLoggedInInside= (
                 <ul className="navigation-list">
                     <li className="navigation-item"><a href="/">Home</a></li>
@@ -173,9 +160,6 @@
                     <div className="break-line"></div>                      
                 </ul>
           )
-            /////////////////////////
-            ///////////* KONIEC MOBILNYCH */////////////////////////    Tu bedzie nazwa usera+img usera
-            
           const deskopLoggedIn =(
             <nav className="header-right">
                         <a className="basic-nav" href="#home">O Nas</a>
@@ -244,14 +228,10 @@
                 <a className="basic-nav" href="#contact">Zaloguj się</a>
             </nav>
           )
-          
-          //SPRAWDZENIE CZY ZALOGOWANY
           const isLoggedMobileIn = this.state.loggedIn ? (mobileLoggedInInside) : (mobileLoggedOutInside)
           const isLoggedMobileOut = this.state.loggedIn ? (mobileLoggedInOutside) : (mobileLoggedOutOutside)
           const isLoggedDeskop = this.state.loggedIn ? (deskopLoggedIn) : (deskopLoggedOut)
-          /////////////////////////////  
-
-            const header = this.state.mobileHeader ? (
+          const header = this.state.mobileHeader ? (
                 <header>  
                     <div className="header-mobile">
                         <img src="{{url_for('static', filename='assets/images/logo.png')}}"/>
