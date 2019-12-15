@@ -5,9 +5,14 @@ from web.models import User as UserModel
 from web.models import Kid
 from web import api
 
-class AddKid(Resource):
+class Kids(Resource):
+    def get(self):
+        return jsonify(kids=[dict(name=k.name, age=k.age, heigth=k.height, 
+                favorite_colour=k.favorite_colour, shoe_size=k.shoe_size)
+                 for k in UserModel.objects(username='LSD').first().kids])
+
     def post(self):
-        user = UserModel.objects(username='LSD').first()
+        user = UserModel.objects(username='twojastara').first()
         kidData = [request.json['name'], request.json['age'], request.json['height'],
                     request.json['favorite_colour'], request.json['shoe_size']]
         for k in kidData:
@@ -18,20 +23,7 @@ class AddKid(Resource):
             favorite_colour=kidData[3],shoe_size=kidData[4]))
         user.save()
         return jsonify(message='Dziecko zostało dodane pomyślnie')
-        
-class GetKids(Resource):
-    def get(self):
-        return jsonify(kids=[dict(name=k.name, age=k.age, heigth=k.height, 
-                favorite_colour=k.favorite_colour, shoe_size=k.shoe_size)
-                 for k in UserModel.objects(username='LSD').first().kids])
 
-class UpdateKid(Resource):
-    def put(self, kid_oid):
-        pass
+class KidsController(Resource):
+    pass
 
-class DeleteKid(Resource):
-    def delete(self):
-        pass
-
-api.add_resource(AddKid, '/api/v1.0/user/kids')
-api.add_resource(GetKids, '/api/v1.0/user/kids')

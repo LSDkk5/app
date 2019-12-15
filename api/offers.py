@@ -1,25 +1,26 @@
 from flask_restful import Resource
 
 class GetAllOffers(Resource):
-    def get(self):
+    def get(self, tags): #Pobranie wszystkich ofert według tagów
         pass
 
-class GetOfferDetails(Resource):
-    def get(self, offer_oid):
-        pass
-
-class DeleteOffer(Resource):
-    def delete(self, offer_oid):
+class Offers(Resource):
+    def get(self, offer_oid): #Pobranie detali o ofercie
         pass
     
-class UpdateOffer(Resource):
-    def put(self, offer_oid):
+    def put(self, offer_id): #Aktualizacja
         pass
 
-class FollowOffer(Resource):
-    def get(self, offer_oid):
+    def delete(self, offer_id): #Usunięcie oferty
         pass
 
-class UnfollowOffer(Resource):
-    def delete(self, offer_oid):
+class FollowedOffers(Resource):
+    def get(self):  #Pobranie obserwowanych ofert użytkownika
+        pass
+
+class FollowOffersController(Resource):
+    def post(self, offer_id): #Obserwowanie oferty
+        pass
+
+    def delete(self, offer_oid): #Usunięcie oferty z obserwowanych
         pass

@@ -5,8 +5,9 @@ from datetime import datetime
 
 from utils.token import generate_confirmation_token, confirm_token
 from utils.send_email import send_email
-from web.models import User
 from web import bcrypt, db, api
+from web.models import User
+
 
 api_auth = Blueprint('api_auth', __name__)
 
@@ -17,7 +18,7 @@ class Login(Resource):
             'username': request.json['username'],
             'password': request.json['password']}
         if loginData['username'] is None or loginData['password'] is None:
-            return abort(400, description='Brakujące argumenty')
+            return abort(403, description='Brakujące argumenty, prosze wypełnić wszystkie pola.')
         user = User.objects(username=loginData['username']).first()
         if user and bcrypt.check_password_hash(
             user.password, loginData['password']):
@@ -31,7 +32,8 @@ class Register(Resource):
         registerData = {
             'username': request.json['username'],
             'password': request.json['password'],
-            'email': request.json['email']}
+            'email': request.json['email'],
+            'sex': request.json['sex']}
         user = User.objects(username=registerData['username']).first()
         userEmail = User.objects(email=registerData['email']).first()
 
@@ -39,11 +41,14 @@ class Register(Resource):
             return abort(403, description='Użytkownik o podanej nazwie już istnieje!')
         elif userEmail:
             return abort(403, description='Konto o podanym adresie email już istnieje! prosimy o podanie innego.')
+        if not registerData['username'] or registerData['password'] or registerData['email'] or registerData['sex']:
+            return abort(403, description='Brakujące argumenty, prosze wypełnić wszystkie pola.')
         newUser = User(
             username=registerData['username'],
             password=bcrypt.generate_password_hash(
                 registerData['password']),
-            email=registerData['email']).save()
+            email=registerData['email'],
+            sex=registerData['sex']).save()
         token = generate_confirmation_token(newUser.email)
         send_email(
             newUser.email,
@@ -90,9 +95,3 @@ class ResendConfirmToken(Resource):
                     token=token,
                     _external=True)))
         return jsonify(message='Na twoj adres email został wysłany link potwierdzający!')
-        
-
-api.add_resource(Login, '/api/v1.0/auth/login')
-api.add_resource(Register, '/api/v1.0/auth/register')
-api.add_resource(ResendConfirmToken, '/api/v1.0/auth/resendtoken')
-api.add_resource(ConfirmAccount, '/api/v1.0/auth/confirm/<confirmToken>')

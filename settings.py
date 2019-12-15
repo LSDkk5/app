@@ -26,5 +26,5 @@ class Settings:
 
     MONGODB_SETTINGS = {
         'db': 'user',
-        'host': 'mongodb+srv://admin:chujkurwa@cluster0-0ehjt.mongodb.net/apitest?retryWrites=true&w=majority'
+        'host': 'localhost'
     }
