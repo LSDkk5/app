@@ -1,4 +1,4 @@
-from flask import request, jsonify
+from flask import request, jsonify, abort
 from flask_restful import Resource
 
 from web.models import User as UserModel
@@ -13,10 +13,11 @@ class Kids(Resource):
 
     def post(self):
         user = UserModel.objects(username='twojastara').first()
+        if not request.json: return abort(403, description='Brakujące argumenty, prosze wypełnić wszystkie pola.')
         kidData = [request.json['name'], request.json['age'], request.json['height'],
                     request.json['favorite_colour'], request.json['shoe_size']]
         for k in kidData:
-            if not k: return jsonify(message='Brakujące parametry')
+            if not k: return abort(403, description='Brakujące argumenty, prosze wypełnić wszystkie pola.')
         if not kidData[1].isdigit() or not kidData[2].isdigit() or not kidData[4].isdigit():
             return jsonify(message='Podane wartości muszą być typu liczbowego!')
         user.kids.append(Kid(name=kidData[0], age=kidData[1], height=kidData[2], 

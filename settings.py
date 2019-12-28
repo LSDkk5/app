@@ -26,5 +26,5 @@ class Settings:
 
     MONGODB_SETTINGS = {
         'db': 'user',
-        'host': 'localhost'
+        'host': 'mongodb://localhost'
     }

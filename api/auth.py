@@ -14,26 +14,31 @@ api_auth = Blueprint('api_auth', __name__)
 
 class Login(Resource):
     def post(self):
+        if not request.json: return abort(403, description='Brakujące argumenty, prosze wypełnić wszystkie pola.')
         loginData = {
             'username': request.json['username'],
             'password': request.json['password']}
-        if loginData['username'] is None or loginData['password'] is None:
+        if not loginData['username'] or not loginData['password']:
             return abort(403, description='Brakujące argumenty, prosze wypełnić wszystkie pola.')
         user = User.objects(username=loginData['username']).first()
         if user and bcrypt.check_password_hash(
             user.password, loginData['password']):
             login_user(user)
         else:
-            return abort(401, description='Dane logowania są niepoprawne! Spradz poprawność wprowadzonych danych!')
+            return abort(403, description='Dane logowania są niepoprawne! Spradz poprawność wprowadzonych danych!')
         return jsonify(message='Zostałeś pomyślnie zalogowany do serwisu!')
 
 class Register(Resource):
     def post(self):
+        if not request.json: return abort(403, description='Brakujące argumenty, prosze wypełnić wszystkie pola.')
         registerData = {
             'username': request.json['username'],
             'password': request.json['password'],
             'email': request.json['email'],
             'sex': request.json['sex']}
+        if not registerData['username'] or not registerData['password'] or (
+            not registerData['email']) or not registerData['sex']:
+            return abort(403, description='Brakujące argumenty, prosze wypełnić wszystkie pola.')
         user = User.objects(username=registerData['username']).first()
         userEmail = User.objects(email=registerData['email']).first()
 
@@ -41,8 +46,6 @@ class Register(Resource):
             return abort(403, description='Użytkownik o podanej nazwie już istnieje!')
         elif userEmail:
             return abort(403, description='Konto o podanym adresie email już istnieje! prosimy o podanie innego.')
-        if not registerData['username'] or registerData['password'] or registerData['email'] or registerData['sex']:
-            return abort(403, description='Brakujące argumenty, prosze wypełnić wszystkie pola.')
         newUser = User(
             username=registerData['username'],
             password=bcrypt.generate_password_hash(
@@ -80,7 +83,7 @@ class ResendConfirmToken(Resource):
         user = User.objects(username='LSD').first()
         login_user(user)
         if not current_user.is_authenticated:
-            return abort(403)
+            return abort(401)
         if current_user.confirmed:
             return abort(403)
         user = User.objects(username=current_user.username).first_or_404()
