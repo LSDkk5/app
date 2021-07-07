@@ -1,0 +1,546 @@
+{% extends "layout.html" %}
+ 
+{% block style %}<link rel="stylesheet" href="{{url_for('static', filename='styles/user.css')}}">{% endblock style %}
+{% block title %}<title>Jakiś tytuł</title>{% endblock title %}
+ 
+ 
+{% block content %}
+<script type="text/babel">
+
+    class App extends React.Component {
+
+        state = {
+        editProfileActive:'EDIT',
+        editProfile:false,
+        editChild:false,
+        deleteChild:false,
+        seeOffer:false,
+        deleteOffer:false,
+        addNewChild:false,
+        numberOfactiveBlock:null,
+        activeBlock:'',
+        user:'',
+
+        kidDetails: [
+            {id:1, name:'HENIO', age:5, sizeOfShoe:42, favColor:'BLACK', height:'545', img:"{{url_for('static', filename='assets/images/a.png')}}"},
+            {id:2,name:'PABLO', age:5, sizeOfShoe:42, favColor:'BLACK', height:'545', img:"{{url_for('static', filename='assets/images/Boy Avatar.svg')}}"},
+            {id:3, name:'KACPER', age:5, sizeOfShoe:42, favColor:'BLACK', height:'545', img:"{{url_for('static', filename='assets/images/Boy Avatar.svg')}}"},
+        ],
+
+        offerDetails: [
+            {id:1, name:'Miecz ßwietlny', conent:5, URL:"aaaaa", price:222, img:"{{url_for('static', filename='assets/images/a.png')}}"},
+            {id:2, name:'Samolot', conent:5, URL:"aaaaa", price:222, img:"{{url_for('static', filename='assets/images/a.png')}}"},
+            {id:3, name:'Rower', conent:5, URL:"aaaaa", price:222, img:"{{url_for('static', filename='assets/images/a.png')}}"}
+        ]
+
+    }
+
+    toggleBlurAndOverlay = () => {
+            let header = document.querySelector('header')
+            let container = document.querySelector('.container')
+            let footer = document.querySelector('footer')
+            const overlay = document.querySelector('.overlay');
+            overlay.classList.toggle('hidden');
+            header.classList.toggle('blur')
+            container.classList.toggle('blur')
+            footer.classList.toggle('blur')
+            if(this.state.activeBlock){
+                let toUnset = this.state.activeBlock;
+                this.setState({
+                    [toUnset]:false,
+                    activeBlock:''  
+                })
+            }
+        }
+
+    handleClickActiveEditing = (someState) => {
+
+        if(someState !== this.state.editProfileActive){
+
+            let oldState = document.querySelector(`.${this.state.editProfileActive}`);
+            oldState.classList.remove('active');
+
+            let newState = document.querySelector(`.${someState}`);
+            newState.classList.add('active');
+
+            this.setState({
+            editProfileActive:someState
+            })
+        }    
+    }
+
+    handleClickEditProfile = (someState, number=null) =>{
+
+        if(number){
+            this.setState({
+                numberOfactiveBlock:number
+            })
+        } else {
+            this.setState({
+                numberOfactiveBlock:null
+            })
+        }
+        
+        this.state[someState] ? (
+            this.setState({
+                [someState]:false,
+                activeBlock:''
+            })
+        ) : (
+            this.setState({
+                [someState]:true,
+                activeBlock:someState
+        }) 
+        )
+        this.toggleBlurAndOverlay();
+        console.log(someState)
+    }                
+
+    handleChange = (inputField) => {
+
+        let kids = this.state.kidDetails;
+        kids[0][inputField.name] = inputField.value
+
+        this.setState({
+            kidDetails : kids
+        })
+    }
+   
+render() {
+
+    const listOfOffers = this.state.offerDetails ? (
+        this.state.offerDetails.map(offer => {
+            return(
+                <div class="user-member" key={offer.id}>
+                    <div class="user-member-img">
+                        <img src={offer.img} alt="Oferta"/>
+                    </div>
+                    <div class="user-member-text">
+                        {offer.name}
+                    </div>
+                        
+                    <div class="user-member-text-edit" id={offer.id} 
+                    onClick={ (e)=>{console.log(e.target.id);this.handleClickEditProfile('seeOffer', e.target.id)}}>
+                        Zobacz szczegóły
+                    </div>
+                    <div class="user-member-text-edit" id={offer.id} 
+                    onClick={ (e)=>{console.log(e.target.id);this.handleClickEditProfile('deleteOffer',e.target.id)}}>
+                        Usuń ofertę
+                    </div>
+                </div>
+            )
+        }) 
+    ) : (
+        <div>Brak polubionych ofert</div>
+    )
+
+    const listOfKids = this.state.kidDetails ? (
+        this.state.kidDetails.map( kid => {
+            return (
+                <div class="user-member" key={kid.id}>
+                    <div class="flying-exit" >
+                        <img src="{{url_for('static', filename='assets/images/x.png')}}" alt="usuń" id={kid.id}     
+                        onClick={ (e)=>{this.handleClickEditProfile('deleteChild', e.target.id)}}/>
+                    </div>
+
+                    <div class="user-member-img">
+                        <img src={kid.img} alt="Członek rodziny"/>
+                    </div>
+                    <div class="user-member-text">
+                        {kid.name}
+                    </div>
+                    <div class="user-member-text">
+                        {kid.age} lat
+                    </div>
+                    <div class="user-member-text-edit" id={kid.id}>
+                        Edytuj dane
+                    </div>
+
+                    <div class="user-member-hover">
+                        <div class="flying-exit" >
+                            <img src="{{url_for('static', filename='assets/images/x.png')}}" alt="usuń" id={kid.id}     
+                            onClick={ (e)=>{this.handleClickEditProfile('deleteChild', e.target.id)}}/>
+                        </div>
+                        <div class="user-member-img">
+                            <img src={kid.img} alt="Członek rodziny"/>
+                        </div>
+                        <div class="child-F-grid">
+                            <div class="edit-child-text">
+                                <img src="{{url_for('static', filename='assets/images/Resize.svg')}}" alt="wzrost"/><br/>
+                                {kid.height}
+                            </div>
+                            <div class="edit-child-text">
+                                <img src="{{url_for('static', filename='assets/images/Birthday.svg')}}" alt="wiek"/><br/>
+                                {kid.age}
+                            </div>
+                            <div class="edit-child-text">
+                                <img src="{{url_for('static', filename='assets/images/Shoe.svg')}}" alt="rozmiar buta"/><br/>
+                                {kid.sizeOfShoe}
+                            </div>
+                            <div class="edit-child-text">
+                                <img src="{{url_for('static', filename='assets/images/color palette.svg')}}" alt="kolor"/><br/>
+                                {kid.favColor}
+                            </div>
+                        </div>
+                        <div class="purple-line-text" id={kid.id} 
+                        onClick={(e)=>{this.handleClickEditProfile('editChild', e.target.id)}}>
+                            Edytuj dane
+                        </div>
+                    </div>
+
+                </div>
+            )
+        })
+    ) : ('')
+
+    
+    const optionTaken = () => {
+        switch(this.state.editProfileActive){
+            case 'SECURITY':
+            return(
+                <div class="edit-profile-user-data">
+                    <h1>SECURITY</h1>
+                </div>
+            )
+
+            case 'DELETE':
+            return (
+                <div class="edit-profile-user-data">
+                    <h2>Usuwanie konta</h2>
+                    <div class="user-data-input">
+                    <label htmlFor="deleteAccount"> Wprowadź hasło</label>
+                        <input type="text" id="deleteAccount"/>
+                    </div>
+                    <div class="user-data-input">
+                        <label htmlFor="deleteAccount"> Potwierdź hasło</label>
+                        <input type="text" id="deleteAccountConfirm"/>
+                    </div>
+                    <h2>Czy na pewno chcesz nas opuścić?</h2>
+                    <div class="img">
+                        <img src="{{url_for('static', filename='assets/images/fakeCry.png')}}" alt=":("/>
+                    </div>
+                    <button class="btn">Tak</button>
+                </div>
+            )
+
+            case 'EDIT': 
+            return (
+                <div class="edit-profile-user-data">
+                <h2>Twoje dane</h2>
+                <div class="edit-profile-img">  
+                    <img src="{{url_for('static', filename='assets/images/girl.svg')}}" alt="Ja"/>
+                    <img src="{{url_for('static', filename='assets/images/changeImgFake.png')}}" alt="Ja"/>
+                </div>
+
+                <div class="edit-profile-user-data-grid">
+                    <div class="user-data-first">
+                        <img src="{{url_for('static', filename='assets/images/age.png')}}" alt="dane"/>
+
+                        <div class="user-data-input">
+                            <label HtmlFor="userName">Nazwa</label>
+                            <input type="text" id="userName"/>
+                        </div>
+
+                        <div class="user-data-input">
+                            <label HtmlFor="userEmail">E-mail</label>
+                            <input type="text" id="userEmail"/> 
+                        </div>
+                    </div>
+
+                    <div class="edit-profile-line"></div>
+
+                    <div class="user-data-second">
+                        <img src="{{url_for('static', filename='assets/images/age.png')}}" alt="hasło"/>
+
+                        <div class="user-data-input">
+                            <label HtmlFor="userPass">Hasło</label>
+                            <input type="text" id="userPass"/>
+                        </div>
+                        <div class="user-data-input">
+                            <label HtmlFor="userNewPass">Wpisz nowe hasło</label>
+                            <input type="text" id="userNewPass"/>     
+                        </div>
+                        <div class="user-data-input">
+                            <label HtmlFor="userEmail">Powtórz nowe hasło</label>
+                            <input type="text" id="userNewPassRep"/> 
+                        </div>
+
+                    </div>
+                </div>
+                <div class="btn">Gotowe</div>  
+            </div>
+            )
+
+            default:
+            return('')
+        }
+    }
+
+    const editProfile = this.state.editProfile ? (
+        <div class="flying edit-profile">
+            <div class="flying-exit"
+            onClick={ ()=>{this.handleClickEditProfile('editProfile')}}>
+                <img src="{{url_for('static', filename='assets/images/x.png')}}" alt="exit"/>
+            </div>
+            <div class="edit-profile-edit-user">
+                <div class="edit-profile-title-and-img active EDIT" 
+                onClick={ (e) => {this.handleClickActiveEditing('EDIT')}}>
+                    <div class="img">
+                        <img src="{{url_for('static', filename='assets/images/age.png')}}" alt=""/>
+                    </div>
+                    <div class="title">
+                        Edytuj Dane
+                    </div>      
+                </div>
+                <div class="edit-profile-title-and-img SECURITY"
+                onClick={ (e) => {this.handleClickActiveEditing('SECURITY')}}>
+                    <div class="img">
+                        <img src="{{url_for('static', filename='assets/images/age.png')}}" alt=""/>
+                    </div> 
+                    <div class="title">
+                        Bezpieczenstwo
+                    </div>
+                </div>
+                <div class="TO_DO">
+                
+                </div>
+                <div class="edit-profile-title-and-img DELETE"
+                    onClick={ (e) => {this.handleClickActiveEditing('DELETE')}}>
+                    <div class="img">
+                        <img src="{{url_for('static', filename='assets/images/age.png')}}" alt=""/>
+                    </div> 
+                    <div class="title">
+                        Usun konto
+                    </div>                    
+                </div>
+            </div>
+
+            {optionTaken()}
+            
+        </div>
+    ) : ('');
+
+    const addNewChild = this.state.addNewChild ? (
+        <div class="flying child-F add-new-child">
+            
+            <h2 class="add-child-h2">Dodawanie nowego członka rodziny</h2>
+            <form action="">
+                <input type="text" placeholder="Imię" class="input-add"/>
+                <input type="text" placeholder="Wzrost" class="input-add"/>
+                <input type="text" placeholder="Wiek" class="input-add"/>
+                <input type="text" placeholder="Rozmiar buta" class="input-add"/>
+                <input type="text" placeholder="Ulubiony kolor" class="input-add"/>
+                <div class="add-child-img">
+                    <img src="{{url_for('static', filename='assets/images/family.svg')}}" alt="Teraz, rodzina"/>
+                </div>
+
+                <input type="submit" value="Dodaj" class="purple-line-text"/>
+                <input type="button" value="Anuluj" class="purple-line-text"
+                onClick={() => {this.handleClickEditProfile('addChild')}}/>
+            </form>
+        </div>
+    ) : ('')
+
+    const deleteChild = this.state.deleteChild ? (
+        <div class="flying child-F delete">
+            <form action="">
+                    <div class="user-member-img">
+                        <img src={this.state.kidDetails[this.state.numberOfactiveBlock-1].img} alt=""/>
+                    </div>
+                    <div class="user-member-text">
+                        {this.state.kidDetails[this.state.numberOfactiveBlock-1].name}
+                    </div>
+                    <h3>Czy na pewno chcesz usunac to dziecko?</h3>
+                    <input class="btn" type="submit" value="TAK"/>  
+                    <input class="btn" type="button" value="NIE"
+                    onClick={() => {this.handleClickEditProfile('deleteChild')}}/>       
+            </form>
+        </div>
+    ) : ('')
+
+    const editChild = this.state.editChild ? (
+        <div class="flying child-F edit-child">
+            <form action="">
+            <div class="child-F-grid">
+                
+                    <div class="edit-child-img">
+                        <img src="{{url_for('static', filename='assets/images/Boy Avatar.svg)}}" alt="Skarb"/>    
+                    </div>
+                    <div class="edit-child-change-img">
+                        Zmień zdjęcie
+                    </div>
+                </div>
+                    <div class="edit-child-text">
+                        <input type="text" 
+                        value={this.state.kidDetails[this.state.numberOfactiveBlock-1].name} name="name" 
+                        onChange={ (e) => { this.handleChange(e.target)}}/>
+                    </div>
+                <div class="child-F-grid">
+                    <div class="edit-child-text">
+                        Wzrost: [CM] <br/>
+                        <input type="text" 
+                        value={this.state.kidDetails[this.state.numberOfactiveBlock-1].height} name="height"
+                        onChange={ (e) => { this.handleChange(e.target)}}/>
+                    </div>
+                    <div class="edit-child-text">
+                        Wiek: <br/>
+                        <input type="text" 
+                        value={this.state.kidDetails[this.state.numberOfactiveBlock-1].age} name="age"
+                        onChange={ (e) => { this.handleChange(e.target)}}/>
+                    </div>
+                    <div class="edit-child-text">
+                        Rozmiar buta: <br/>
+                        <input type="text" 
+                        value={this.state.kidDetails[this.state.numberOfactiveBlock-1].sizeOfShoe} name="sizeOfShoe"
+                        onChange={ (e) => { this.handleChange(e.target)}}/>
+                    </div>
+                    <div class="edit-child-text">
+                        Kolor: <br/>
+                        <input type="text" 
+                        value={this.state.kidDetails[this.state.numberOfactiveBlock-1].favColor} name="favColor"
+                        onChange={ (e) => { this.handleChange(e.target)}}/>
+                    </div>
+                </div>
+                <div class="purple-line-text" onClick={() => {this.handleClickEditProfile('editChild')}}>
+                   <input type="submit" value="Zapisz dane"/>
+                </div>
+            </form>
+            <div class="purple-line-text" onClick={() => {this.handleClickEditProfile('editChild')}}>
+                Anuluj
+            </div>   
+        </div>
+    ) : ('')
+
+    const seeOffer = this.state.seeOffer ? (
+        <div class="flying see-offer">
+            <div class="flying-exit" >
+                <img src="{{url_for('static', filename='assets/images/x.png')}}" alt="wyjdź" onClick={ ()=>{this.handleClickEditProfile('seeOffer')}}/>
+            </div>
+            <div class="see-offer-img">
+                <img src="{{url_for('static', filename='assets/images/Boy Avatar.svg')}}" alt="Oferta"/>
+            </div>
+            <div class="description-of-item">
+                <h2 class="with-bottom-line">{this.state.offerDetails[this.state.numberOfactiveBlock-1].name}</h2>
+                <p class="big-padding">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam quia reprehenderit 
+                architecto quo blanditiis inventore quis aperiam, praesentium ex corrupti fugiat minus 
+                maiores repellendus commodi nostrum, quasi quam distinctio ducimus.</p>
+                <button class="btn">🎁 ZAKUP</button>
+                 <div class="price-and-url">
+                    <div class="url" >
+                    Znalezione na: <br/>
+                    <a href="">{this.state.offerDetails[this.state.numberOfactiveBlock-1].URL}</a>
+                    </div>
+                    <div class="price">Cena: {this.state.offerDetails[this.state.numberOfactiveBlock-1].price} zl</div>
+                 </div>
+            </div>
+        </div>
+    ) : ('')
+
+    const deleteOffer = this.state.deleteOffer ? (
+        <div class="flying child-F delete">
+            <form action="">
+                    <div class="user-member-img">
+                        <img src={this.state.offerDetails[1].img} alt="Członek rodziny"/>
+                    </div>
+                    <div class="user-member-text">
+                        {this.state.offerDetails[this.state.numberOfactiveBlock-1].name}
+                    </div>
+                    <h3>Czy na pewno chcesz usunac tá oferte?</h3>
+                    <input class="btn" type="submit" value="TAK"/>  
+                    <input  class="btn"type="button" value="NIE"
+                    onClick={() => {this.handleClickEditProfile('deleteOffer')}}/>       
+            </form>
+        </div>
+    ) : ('')
+
+
+    return (
+        <main>
+            <div className="overlay hidden" onClick={this.toggleBlurAndOverlay}></div>
+            {editProfile}
+            {editChild}
+            {deleteChild}
+            {addNewChild}
+            {seeOffer}
+            {deleteOffer}
+    <div class="container">
+        <div class="user-description">
+            <div class="user-edit" onClick={ ()=>{this.handleClickEditProfile('editProfile')}}>
+                Edytuj profil <img src="{{url_for('static', filename='assets/images/SWINIA.svg')}}" alt="edytuj"/>
+            </div>
+            <div class="user-grid">
+                <div class="user-his-image">
+                    <img src="{{url_for('static', filename='assets/images/SWINIA.svg')}}" alt="Ja"/>
+                </div>
+                <div class="user-textarea">
+                    <h2 class="user-name">
+                        Nazwa użytkownika
+                    </h2>
+                    <h5 class="user-likes-h5">
+                        Polubione oferty: 51
+                    </h5>
+                    <h5 class="user-likes-h5">
+                        Data założenia: 15 stycznia 2030 rok
+                    </h5>
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="user-family">
+            <div class="user-family-title-box">
+                <div class="user-family-title-box-img">
+                    <img src="{{url_for('static', filename='assets/imagesSWINIA.svg')}}" alt=""/>
+                </div>
+                <div class="user-family-title-box-text">
+                    <h2>Moja rodzina:</h2>
+                    <h3>Edytuj oraz przeglądaj profile Twojej rodziny.</h3>
+                </div>
+            </div>
+            <div class="user-members">
+                <div class="user-member add">
+                    <div class="user-member-img">
+                        <img src="{{url_for('static', filename='assets/images/k.png')}}" alt="Członek rodziny" 
+                        onClick={ ()=>{this.handleClickEditProfile('addNewChild')}}/>
+                    </div>
+                    <div class="user-member-text">
+                        Dodaj nowego członka.
+                    </div>
+                    <div class="user-member-text">
+                        
+                    </div>
+                </div>
+
+                {listOfKids}  
+                     
+            </div>    
+        </div>
+
+        <div class="user-family">
+            <div class="user-family-title-box">
+                <div class="user-family-title-box-img">
+                    <img src="{{url_for('static', filename='assets/images/SWINIA.svg')}}" alt="Ja"/>
+                </div>
+                <div class="user-family-title-box-text">
+                    <h2>Polubione oferty:</h2>
+                    <h3>Zobacz oferty, które polubiłeś.</h3>
+                </div>
+            </div>
+                <div class="user-members">
+                    
+                    {listOfOffers}
+                    
+                </div> 
+            </div>
+        </div>
+        
+        </main> 
+           )
+    }            
+}
+    
+    ReactDOM.render(<App/>, document.getElementById('App'));
+
+</script>
+{% endblock content %}
